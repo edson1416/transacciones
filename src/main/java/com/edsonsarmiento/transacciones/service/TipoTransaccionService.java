@@ -22,7 +22,32 @@ public class TipoTransaccionService implements TipoTransaccionInterface {
 
     @Override
     public List<TipoTransaccionDto> allTipoTransacciones() {
-        List<TipoTransaccion> listaTipoTransacciones = tipoTransaccionRepository.findAll();
-        return tipoTransaccionMapper.listEntityToListDto(listaTipoTransacciones);
+        return tipoTransaccionMapper.listEntityToListDto(tipoTransaccionRepository.findAll());
+    }
+
+    @Override
+    public TipoTransaccionDto createTipoTransaccion(TipoTransaccionDto tipoTransaccionDto) {
+        return tipoTransaccionMapper.entityToDto(
+                tipoTransaccionRepository.save(tipoTransaccionMapper.dtoToEntity(tipoTransaccionDto))
+        );
+    }
+
+    @Override
+    public TipoTransaccionDto updateTipoTransaccion(Long id, TipoTransaccionDto tipoTransaccionDto) {
+        return tipoTransaccionRepository.findById(id).map(
+                entidad ->{
+                    entidad.setNombre(tipoTransaccionDto.getNombre());
+                    entidad.setDescripcion(tipoTransaccionDto.getDescripcion());
+
+                    return tipoTransaccionMapper.entityToDto(tipoTransaccionRepository.save(entidad));
+                }).orElseThrow(() -> new RuntimeException("No existe el tipo de transaccion"));
+    }
+
+    @Override
+    public void deleteTipoTransaccion(Long id) {
+        if (!tipoTransaccionRepository.existsById(id)){
+            throw new RuntimeException("Tipo Transaccion no encontrado");
+        }
+        tipoTransaccionRepository.deleteById(id);
     }
 }
