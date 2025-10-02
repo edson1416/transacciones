@@ -14,12 +14,10 @@ public interface TransaccionesMapper {
 
     TransaccionesMapper INSTANCE = Mappers.getMapper(TransaccionesMapper.class);
 
-    @Mappings({})
     Transacciones dtoToEntity(TransaccionesDto transaccionesDto);
 
     @InheritInverseConfiguration
     TransaccionesDto entityToDto(Transacciones transacciones);
 
-    @Mappings({})
     List<TransaccionesDto> listEntityToListDto(List<Transacciones> transacciones);
 }
